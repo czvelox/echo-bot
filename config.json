@@ -1,0 +1,8 @@
+[{
+    "name": "mode",
+    "displayName": "Мод работы эхо",
+    "description": "Мод, который будет использоваться для эхо-ответа",
+    "type": "enum",
+    "enum": ["sticker", "text"],
+    "default": "sticker"
+}]
