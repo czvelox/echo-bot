@@ -1,0 +1,6 @@
+.evogram
+/assets
+/logs
+/node_modules
+
+.env
