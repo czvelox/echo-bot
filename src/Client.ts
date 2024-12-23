@@ -5,7 +5,7 @@ export interface EchoBotParams {
 }
 
 export class EchoBot {
-	private client: Evogram;
+	public client: Evogram;
 
 	constructor(
 		private token: string,
