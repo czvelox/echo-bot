@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { EchoBot } from './Client';
 
 const app = express();
-const port = 3000;
+app.use(express.json());
 
 app.post('/startBot', (req: Request, res: Response) => {
 	const { token, settings } = req.body;
@@ -11,6 +11,6 @@ app.post('/startBot', (req: Request, res: Response) => {
 	res.send('Bot started');
 });
 
-app.listen(port, () => {
-	console.log(`Server is running on http://localhost:${port}`);
+app.listen(3000, () => {
+	console.log(`Server is running on http://localhost:3000`);
 });
