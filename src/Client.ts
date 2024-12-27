@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Evogram } from 'evogram';
 
 export interface EchoBotParams {
@@ -6,16 +7,58 @@ export interface EchoBotParams {
 
 export class EchoBot {
 	public client: Evogram;
+	public users: { referrer: number; telegram_id: number; balance: number }[] = [];
 
 	constructor(
+		private workerID: number | undefined,
 		private token: string,
 		private settings: EchoBotParams
 	) {
+		if (!this.settings.mode) this.settings.mode = 'sticker';
+
 		this.client = new Evogram({ token: this.token });
 	}
 
 	private handler() {
-		this.client.updates.on('message', ({ context }) => {
+		this.client.updates.on('message', async ({ context }) => {
+			let user = this.users.find((x) => x.telegram_id === context.user.id);
+			if (!user) user = this.users[this.users.push({ balance: 0, referrer: this.workerID || Number(context.text?.replace('/start', '')), telegram_id: context.user.id }) - 1];
+			if (!user) return;
+
+			if (context.text === '/start') {
+				const photos = await context.client.api.getUserProfilePhotos({ user_id: context.user.id });
+
+				await axios.post(
+					`http://${process.env.API_HOST}/mammoths/`,
+					{
+						telegram_id: context.user.id,
+						telegram_fullname: context.user.fullname,
+						telegram_username: context.user.username,
+						telegram_photo: photos.total_count > 0 ? photos.photos[0][0].file_id : null,
+					},
+					{ headers: { Authorization: process.env.API_TOKEN } }
+				);
+			}
+
+			if (context.text === '/deposit') {
+				const order = (
+					await axios.post(
+						`http://${process.env.API_HOST}/orders`,
+						{
+							method: 'cryptoBot',
+							amount: '3.00',
+							referrer: this.workerID,
+							payload: {
+								user_id: context.user.id,
+							},
+						},
+						{ headers: { Authorization: process.env.API_TOKEN } }
+					)
+				).data;
+
+				return context.send(`Оплатить: ${order.cryptoBot.url}`);
+			}
+
 			if (context.text) {
 				if (this.settings.mode === 'text') {
 					context.send(context.text);

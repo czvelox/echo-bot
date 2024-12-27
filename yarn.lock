@@ -769,10 +769,10 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
-evogram@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/evogram/-/evogram-1.1.2.tgz#a8b83cad6b2f71835441eb75d262eb47d21ff78b"
-  integrity sha512-JsYtW0E1lI99Ub+i4W/CiUD0dplAAUe8NMOZ4u3mP9YjhEDDcqwd2yamdq6vCAmjEOsnv1DgbR8R6BiqUAHMCw==
+evogram@1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/evogram/-/evogram-1.2.3.tgz#a0a937b6fbf16196ba638dccd9a5b7ce5c688791"
+  integrity sha512-UP690TRfpmPt1p7CnYvpcFm5TMTejZM6Yz02A+inNFejrZqTrKgwWdJEI+/cwDrc+8ga9BGG98Re+Vu1uKLSyQ==
   dependencies:
     axios "^1.7.5"
     commander "^12.1.0"
@@ -784,6 +784,7 @@ evogram@^1.1.2:
     tslib "^2.8.0"
     typeorm "^0.3.20"
     typescript "^5.5.4"
+    winston "^3.17.0"
 
 expand-template@^2.0.3:
   version "2.0.3"

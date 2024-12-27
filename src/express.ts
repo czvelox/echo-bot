@@ -6,8 +6,9 @@ const app = express();
 app.use(express.json());
 
 app.post('/startBot', (req: Request, res: Response) => {
-	const { token, settings } = req.body;
-	const echoBot = new EchoBot(token, settings);
+	const { worker, token, settings } = req.body;
+
+	const echoBot = new EchoBot(worker?.id, token, settings);
 	echoBot.start();
 
 	bots.push(echoBot);
@@ -23,6 +24,23 @@ app.post('/stopBot', (req: Request, res: Response) => {
 
 	bots[index].client.updates.polling.stop();
 	bots.splice(index, 1);
+});
+
+app.post('/replenishment', (req: Request, res: Response) => {
+	const { order } = req.body;
+	bots.forEach((bot) => {
+		res.statusCode = 200;
+		res.send('OK');
+
+		bot.client.api.sendMessage({
+			text: `Успешное пополнение на сумму ${order.amount} RUB!`,
+			chat_id: order.payload.user_id,
+		});
+	});
+});
+
+app.get('/', (req, res) => {
+	res.send('OK');
 });
 
 app.listen(3000, () => {
