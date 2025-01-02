@@ -9,7 +9,7 @@ export const bots: EchoBot[] = [];
 
 axios.get(`http://${process.env.API_HOST}/bots`, { headers: { Authorization: process.env.API_TOKEN } }).then((response) => {
 	response.data.forEach((bot: any) => {
-		const echoBot = new EchoBot(bot.worker?.id, bot.token, bot.settings);
+		const echoBot = new EchoBot(bot?.id, bot.token, bot.settings);
 		echoBot.start();
 
 		bots.push(echoBot);

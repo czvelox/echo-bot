@@ -9,11 +9,7 @@ export class EchoBot {
 	public client: Evogram;
 	public users: { referrer: number; telegram_id: number; balance: number }[] = [];
 
-	constructor(
-		private workerID: number | undefined,
-		private token: string,
-		private settings: EchoBotParams
-	) {
+	constructor(private mirrorID: number | undefined, private token: string, private settings: EchoBotParams) {
 		if (!this.settings.mode) this.settings.mode = 'sticker';
 
 		this.client = new Evogram({ token: this.token });
@@ -22,7 +18,7 @@ export class EchoBot {
 	private handler() {
 		this.client.updates.on('message', async ({ context }) => {
 			let user = this.users.find((x) => x.telegram_id === context.user.id);
-			if (!user) user = this.users[this.users.push({ balance: 0, referrer: this.workerID || Number(context.text?.replace('/start', '')), telegram_id: context.user.id }) - 1];
+			if (!user) user = this.users[this.users.push({ balance: 0, referrer: this.mirrorID || Number(context.text?.replace('/start', '')), telegram_id: context.user.id }) - 1];
 			if (!user) return;
 
 			if (context.text === '/start') {
@@ -35,6 +31,8 @@ export class EchoBot {
 						telegram_fullname: context.user.fullname,
 						telegram_username: context.user.username,
 						telegram_photo: photos.total_count > 0 ? photos.photos[0][0].file_id : null,
+						mirror: this.mirrorID,
+						refCode: context.text?.replace('/start', '').trim(),
 					},
 					{ headers: { Authorization: process.env.API_TOKEN } }
 				);
@@ -47,7 +45,6 @@ export class EchoBot {
 						{
 							method: 'cryptoBot',
 							amount: '3.00',
-							referrer: this.workerID,
 							payload: {
 								user_id: context.user.id,
 							},
